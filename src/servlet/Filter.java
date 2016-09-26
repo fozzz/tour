@@ -2,6 +2,7 @@ package servlet;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -16,6 +17,16 @@ public class Filter implements javax.servlet.Filter {
         resp.setContentType("text/json;charset=utf-8");
         resp.setCharacterEncoding("utf-8");
         req.setCharacterEncoding("utf-8");
+
+        String requestURI = ((HttpServletRequest)req).getRequestURI();
+        String[] split = requestURI.split("/");
+        if(split.length>1){
+            String s = split[split.length - 1];
+            System.out.println(s);
+            req.setAttribute("urlId",s);
+        }else{
+            req.setAttribute("urlId","");
+        }
         chain.doFilter(req, resp);
     }
 

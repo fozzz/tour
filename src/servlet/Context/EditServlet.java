@@ -14,5 +14,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/api/context/edit/*")
 public class EditServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Object urlId = request.getAttribute("urlId");
+        System.out.println(urlId);
     }
 }

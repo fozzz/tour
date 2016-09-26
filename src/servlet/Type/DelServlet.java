@@ -14,7 +14,6 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/api/type/del/*")
 public class DelServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
-        System.out.println(requestURI);
+
     }
 }
