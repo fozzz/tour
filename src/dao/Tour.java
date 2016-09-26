@@ -12,7 +12,7 @@ import java.util.List;
 public interface Tour {
     public void delContext(int id) throws SQLException;
     public void addContext(Context context);
-    public List<Context> getContext(int num);
+    public List<Context> getContext(int num,int type_id);
     public void editContext(Context context);
 
     public void delType(int id);

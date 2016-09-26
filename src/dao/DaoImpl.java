@@ -78,14 +78,15 @@ public class DaoImpl implements Tour {
     }
 
     @Override
-    public List<Context> getContext(int num) {
+    public List<Context> getContext(int num,int tp_id) {
         List<Context> cts=new ArrayList<>();
         Connection conn=null;
         PreparedStatement ps = null;
-        String sql="SELECT * FROM tour_context ORDER BY date DESC LIMIT "+num;
+        String sql="SELECT * FROM tour_context WHERE type_id=? ORDER BY date DESC LIMIT "+num;
         try {
             conn=DriverManager.getConnection(url,username,password);
             ps=conn.prepareStatement(sql);
+            ps.setInt(1,tp_id);
             ResultSet rs=ps.executeQuery();
             while (rs.next()){
                 int id=rs.getInt(1);
@@ -112,13 +113,20 @@ public class DaoImpl implements Tour {
 
     @Override
     public void editContext(Context context) {
-        int id=context.getId();
+
         Connection conn=null;
         PreparedStatement ps = null;
         try {
             conn=DriverManager.getConnection(url,username,password);
-            ps=conn.prepareStatement("DELETE FROM tour_context WHERE id=?");
-            ps.setInt(1,id);
+            ps=conn.prepareStatement("update tour_context set id=?,type_id=?,title=?,date=?,context=?,pic=? where id=?");
+            ps.setInt(1,context.getId());
+            ps.setInt(2,context.getType_id());
+            ps.setString(3,context.getTitle());
+            ps.setInt(4,context.getDate());
+            ps.setString(5,context.getContext());
+            ps.setString(6,context.getPic());
+            ps.setInt(7,context.getId());
+            ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -139,7 +147,25 @@ public class DaoImpl implements Tour {
 
     @Override
     public void addType(Type type) {
+        Connection conn=null;
+        PreparedStatement ps = null;
+        try {
+            conn=DriverManager.getConnection(url,username,password);
+            ps=conn.prepareStatement("INSERT INTO tour(id,context)VALUES (?,?)");
+            ps.setInt(1,type.getId());
+            ps.setString(2,type.getContext());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
+        }
     }
 
     @Override
@@ -149,7 +175,25 @@ public class DaoImpl implements Tour {
 
     @Override
     public void editType(Type type) {
-
+        Connection conn=null;
+        PreparedStatement ps = null;
+        try {
+            conn=DriverManager.getConnection(url,username,password);
+            ps=conn.prepareStatement("update tour set id=?,context=? where id=?");
+            ps.setInt(1,type.getId());
+            ps.setString(2,type.getContext());
+            ps.setInt(3,type.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -163,5 +207,6 @@ public class DaoImpl implements Tour {
 //        List<Context>list=tour.getContext(3);
 //        System.out.println(list.get(0).getId());
 //        tour.delContext(1);
+        tour.editContext(new Context(2,1,"xwbt",20160928,"内容","C://"));
     }
 }
