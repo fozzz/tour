@@ -3,10 +3,8 @@ package dao;
 import po.Context;
 import po.Type;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +12,7 @@ import java.util.List;
  */
 public class DaoImpl implements Tour {
 
-    private String url="jdbc:mysql://192.168.1.101";
+    private String url="jdbc:mysql://192.168.1.101/tour";
     private String username="root";
     private String password="root";
 
@@ -54,16 +52,83 @@ public class DaoImpl implements Tour {
 
     @Override
     public void addContext(Context context) {
+        Connection conn=null;
+        PreparedStatement ps = null;
+        try {
+            conn=DriverManager.getConnection(url,username,password);
+            ps=conn.prepareStatement("INSERT INTO tour_context(id,type_id,title,date,context,pic)VALUES (?,?,?,?,?,?)");
+            ps.setInt(1,context.getId());
+            ps.setInt(2,context.getType_id());
+            ps.setString(3,context.getTitle());
+            ps.setInt(4,context.getDate());
+            ps.setString(5,context.getContext());
+            ps.setString(6,context.getPic());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
+        }
     }
 
     @Override
     public List<Context> getContext(int num) {
-        return null;
+        List<Context> cts=new ArrayList<>();
+        Connection conn=null;
+        PreparedStatement ps = null;
+        String sql="SELECT * FROM tour_context ORDER BY date DESC LIMIT "+num;
+        try {
+            conn=DriverManager.getConnection(url,username,password);
+            ps=conn.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery();
+            while (rs.next()){
+                int id=rs.getInt(1);
+                int type_id=rs.getInt(2);
+                String title=rs.getString(3);
+                int date=rs.getInt(4);
+                String context=rs.getString(5);
+                String pic=rs.getString(6);
+                Context ct=new Context(id,type_id,title,date,context,pic);
+                cts.add(ct);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return cts;
     }
 
     @Override
     public void editContext(Context context) {
+        int id=context.getId();
+        Connection conn=null;
+        PreparedStatement ps = null;
+        try {
+            conn=DriverManager.getConnection(url,username,password);
+            ps=conn.prepareStatement("DELETE FROM tour_context WHERE id=?");
+            ps.setInt(1,id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                ps.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -85,5 +150,18 @@ public class DaoImpl implements Tour {
     @Override
     public void editType(Type type) {
 
+    }
+
+    public static void main(String[] args) {
+        Tour tour=new DaoImpl();
+//        try {
+//            tour.delContext(1);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        tour.addContext(new Context(1,1,"新闻标题",20160926,"内容","F://1.gif"));
+//        List<Context>list=tour.getContext(3);
+//        System.out.println(list.get(0).getId());
+//        tour.delContext(1);
     }
 }
