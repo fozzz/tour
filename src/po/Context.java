@@ -18,6 +18,7 @@ public class Context {
         this.date = date;
         this.context = context;
         this.pic = pic;
+
     }
 
     public int getId() {

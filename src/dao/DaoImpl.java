@@ -21,6 +21,7 @@ public class DaoImpl implements Tour {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            
         }
     }
 
