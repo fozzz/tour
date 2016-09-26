@@ -20,10 +20,10 @@ public class ListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("in");
         Gson gson = new Gson();
-        Context context = new Context("name","password");
-        String s = gson.toJson(context);
+//        Context context = new Context("name","password");
+//        String s = gson.toJson(context);
         PrintWriter writer = response.getWriter();
-        writer.write(s);
+//        writer.write(s);
 
     }
 }

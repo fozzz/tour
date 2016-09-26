@@ -15,7 +15,7 @@ public interface Tour {
     public List<Context> getContext(int num,int type_id);
     public void editContext(Context context);
 
-    public void delType(int id);
+//    public void delType(int id);
     public void addType(Type type);
     public Type getType(int id);
     public void editType(Type type);

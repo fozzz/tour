@@ -12,6 +12,9 @@ public class Type {
         this.context = context;
     }
 
+    public Type() {
+    }
+
     public int getId() {
         return id;
     }
